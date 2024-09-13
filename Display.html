@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script
+        src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate</title>
+</head>
+
+<body>
+    <header>
+        <div class="scrool bg-blue-500 min-h-screen m-0 p-0 border border-black fixed w-full">
+            <div>
+                <h1 class="bg-black text-white text-center text-4xl font-bold py-8">Calculate</h1>
+            </div>
+            <div>
+                <section class="flex justify-center mt-16 px-4">
+                    <div class="w-full max-w-md">
+                        <input id="display-calc"
+                            class="w-full h-16 md:h-32 text-2xl md:text-4xl p-4 rounded mb-4  border-2 border-black "
+                            type="text" disabled>
+                        <article class="grid grid-cols-4 gap-2">
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl border-2 border-black "
+                                onclick="appendNumber('7')">7</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('8')">8</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl border-2 border-black "
+                                onclick="appendNumber('9')">9</button>
+                            <button class="bg-yellow-400 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="chooseOperation('+')">+</button>
+
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('4')">4</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('5')">5</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('6')">6</button>
+                            <button class="bg-yellow-400 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="chooseOperation('-')">-</button>
+
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('1')">1</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('2')">2</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('3')">3</button>
+                            <button class="bg-yellow-400 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="chooseOperation('*')">*</button>
+
+                            <button class="bg-red-400 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="clearDisplay()">C</button>
+                            <button class="bg-gray-200 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="appendNumber('0')">0</button>
+                            <button
+                                class="bg-green-400 p-4 rounded text-lg md:text-xl col-span-2  border-2 border-black "
+                                onclick="calculate()">=</button>
+                            <button class="bg-yellow-400 p-4 rounded text-lg md:text-xl  border-2 border-black "
+                                onclick="chooseOperation('/')">/</button>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </header>
+    <script>
+        let cNumber = ""; // Armazena o número atual digitado pelo usuário
+        let pNumber = ""; // Armazena o número anterior digitado
+        let myOperation = undefined; // Armazena a operação selecionada
+
+        function appendNumber(number) {
+            cNumber += number; // Concatena o número digitado ao número atual
+            updateDisplay(); // Atualiza o display com o valor atual
+        }
+
+        function chooseOperation(op) {
+            if (cNumber === "") return; // Impede a escolha de operação se não houver um número atual
+            if (pNumber !== "") { // Se houver um número anterior, calcula o resultado antes de escolher nova operação
+                calculate();
+            }
+            myOperation = op; // Armazena a operação selecionada
+            pNumber = cNumber; // Move o número atual para o número anterior
+            cNumber = ''; // Limpa o número atual para que o próximo número possa ser inserido
+        }
+
+        function calculate() {
+            let result; // Variável para armazenar o resultado do cálculo
+            const prev = parseFloat(pNumber); // Converte o número anterior de string para float
+            const current = parseFloat(cNumber); // Converte o número atual de string para float
+            if (isNaN(prev) || isNaN(current)) return; // Impede o cálculo se um dos números for inválido
+
+            // Realiza a operação com base no valor de myOperation
+            switch (myOperation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return; // Caso nenhuma operação válida tenha sido selecionada, retorna sem fazer nada
+            }
+
+            cNumber = result; // Atualiza o número atual com o resultado do cálculo
+            myOperation = undefined; // Reseta a operação selecionada
+            pNumber = ''; // Limpa o número anterior
+            updateDisplay(); // Atualiza o display com o novo valor
+        }
+
+        function clearDisplay() {
+            cNumber = ''; // Limpa o número atual
+            pNumber = ''; // Limpa o número anterior
+            myOperation = undefined; // Reseta a operação
+            updateDisplay(); // Atualiza o display, que agora ficará vazio
+        }
+
+        function updateDisplay() {
+            document.getElementById('display-calc').value = cNumber; // Atualiza o campo de input com o valor do número atual
+        }
+    </script>
+</body>
+
+</html>
